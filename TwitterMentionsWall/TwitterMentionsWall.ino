@@ -31,7 +31,7 @@
 #define NEO_PIN     6 // Arduino pin to NeoPixel data input
 #define NEO_WIDTH  75 // Hat circumference in pixels
 #define NEO_HEIGHT  7 // Number of pixel rows (round up if not equal)
-#define NEO_OFFSET  0 // (((NEO_WIDTH * NEO_HEIGHT) - 240) / 2)
+#define NEO_OFFSET  75 // (((NEO_WIDTH * NEO_HEIGHT) - 240) / 2)
 
 // Pixel strip must be coiled counterclockwise, top to bottom, due to
 // custom remap function (not a regular grid).
@@ -40,7 +40,7 @@ Adafruit_NeoMatrix matrix(NEO_WIDTH, NEO_HEIGHT, NEO_PIN,
   NEO_MATRIX_ROWS + NEO_MATRIX_PROGRESSIVE,
   NEO_GRB         + NEO_KHZ800);
 
-char          msg[21]       = "test";            // BLE 20 char limit + NUL
+char          msg[21]       = "Hello World!!";            // BLE 20 char limit + NUL
 uint8_t       msgLen        = 4;              // Empty message
 int           msgX          = matrix.width(); // Start off right edge
 unsigned long prevFrameTime = 0L;             // For animation timing
@@ -57,9 +57,9 @@ unsigned long prevLEDtime = 0L;  // For LED timing
 
 
 ///////  create a file TembooAccount.h that contains:  //////////
-// #define TEMBOO_ACCOUNT "actName"       // Your Temboo account name 
-// #define TEMBOO_APP_KEY_NAME "appName"  // Your Temboo app key name
-// #define TEMBOO_APP_KEY "appKey"        // Your Temboo app key
+//#define TEMBOO_ACCOUNT ""       // Your Temboo account name 
+//#define TEMBOO_APP_KEY_NAME ""  // Your Temboo app key name
+//#define TEMBOO_APP_KEY ""        // Your Temboo app key
 /////////////////////////////////////////////////////////////////
 
 #include <Bridge.h>
@@ -86,7 +86,7 @@ int           CallPeriod   = 0;   // Time (milliseconds) between calls to Temboo
 // grid position, this returns the corresponding strip pixel number.
 // Any off-strip pixels are automatically clipped by the NeoPixel library.
 uint16_t remapXY(uint16_t x, uint16_t y) {
-  return y * NEO_WIDTH + x - NEO_OFFSET;
+  return y * NEO_WIDTH - x + NEO_OFFSET;
 }
 
 // Given hexadecimal character [0-9,a-f], return decimal value (0 if invalid)
