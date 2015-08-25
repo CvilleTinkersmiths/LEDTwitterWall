@@ -21,6 +21,7 @@
 #include <Adafruit_NeoMatrix.h>
 #include <Adafruit_GFX.h>
 
+
 // NEOPIXEL STUFF ----------------------------------------------------------
 
 // 4 meters of NeoPixel strip is coiled around a top hat; the result is
@@ -31,7 +32,7 @@
 #define NEO_PIN     6 // Arduino pin to NeoPixel data input
 #define NEO_WIDTH  75 // Hat circumference in pixels
 #define NEO_HEIGHT  7 // Number of pixel rows (round up if not equal)
-#define NEO_OFFSET  75 // (((NEO_WIDTH * NEO_HEIGHT) - 240) / 2)
+#define NEO_OFFSET  74 // (((NEO_WIDTH * NEO_HEIGHT) - 240) / 2)
 
 // Pixel strip must be coiled counterclockwise, top to bottom, due to
 // custom remap function (not a regular grid).
@@ -40,11 +41,13 @@ Adafruit_NeoMatrix matrix(NEO_WIDTH, NEO_HEIGHT, NEO_PIN,
   NEO_MATRIX_ROWS + NEO_MATRIX_PROGRESSIVE,
   NEO_GRB         + NEO_KHZ800);
 
-char          msg[21]       = "Hello World!!";            // BLE 20 char limit + NUL
-uint8_t       msgLen        = 4;              // Empty message
-int           msgX          = matrix.width(); // Start off right edge
-unsigned long prevFrameTime = 0L;             // For animation timing
-#define FPS 20                                // Scrolling speed
+char          msg[21]          = "initializing..."; // BLE 20 char limit + NUL
+uint8_t       msgLen           = NULL;              // Empty message
+int           msgX             = matrix.width();    // Start off right edge
+unsigned long prevFrameTime    = 0L;                // For animation timing
+int           matrixFPS        = 10;                // Scrolling speed
+int           matrixColor      = matrix.Color(255,0,0); // RGB
+int           matrixBrightness = 31;                // Batteries have limited sauce (0 to 255)
 
 // STATUS LED STUFF --------------------------------------------------------
 
@@ -66,6 +69,7 @@ unsigned long prevLEDtime = 0L;  // For LED timing
 #include <Temboo.h>
 #include "TembooAccount.h"
 
+
 // We limit this so you won't use all of your Temboo calls while testing
 int maxCalls = 10;
 
@@ -73,7 +77,7 @@ int maxCalls = 10;
 int calls = 0;
 
 unsigned long prevCalltime = 0L;  // For Temboo Account Call timing
-int           CallPeriod   = 0;   // Time (milliseconds) between calls to Temboo to check for Twitter mentions (zero disables)
+int           CallPeriod   = 6000;   // Time (milliseconds) between calls to Temboo to check for Twitter mentions (zero disables)
 
 ///////// END Temboo stuff /////////////////
 
@@ -103,8 +107,7 @@ void setup() {
   matrix.begin();
   matrix.setRemapFunction(remapXY);
   matrix.setTextWrap(false);   // Allow scrolling off left
-  matrix.setTextColor(0xF800); // Red by default
-  matrix.setBrightness(31);    // Batteries have limited sauce
+  matrix.setBrightness(matrixBrightness);    // Batteries have limited sauce
 
 
   pinMode(LED, OUTPUT);
@@ -123,25 +126,31 @@ void loop() {
   // millis() comparisons are used rather than delay() so that animation
   // speed is consistent regardless of message length & other factors.
 
+  matrix.setTextColor(matrixColor); // Red by default
+
   if(LEDperiod && ((t - prevLEDtime) >= LEDperiod)) { // Handle LED flash
     prevLEDtime = t;
     LEDstate    = !LEDstate;
     digitalWrite(LED, LEDstate);
+   
   }
 
   if(CallPeriod && ((t - prevCalltime) >= CallPeriod) && (calls < maxCalls)) { // Check Twitter periodically until maxCalls is reached
     prevCalltime = t;
     
     //Serial.println("Calling LatestMention Choreo...");
+    //sprintf(msg, "Call %d, start", calls);
     runLatestMention();
+    //sprintf(msg, "Call %d done", calls);
     calls++;
   }
 
   
-  if((t - prevFrameTime) >= (1000L / FPS)) { // Handle scrolling
+  if((t - prevFrameTime) >= (1000L / matrixFPS)) { // Handle scrolling
     matrix.fillScreen(0);
     matrix.setCursor(msgX, 0);
     matrix.print(msg);
+    msgLen = sizeof(msg);
     if(--msgX < (msgLen * -6)) msgX = matrix.width(); // We must repeat!
     matrix.show();
     prevFrameTime = t;
@@ -176,10 +185,17 @@ void runLatestMention() {
 
   // A return code of zero means everything worked
   if (returnCode == 0) {
+    
+    //sprintf(msg, "Choreo");
+      
     while (LatestMentionChoreo.available()) {
+      
+      sprintf(msg, "reading", returnCode);
+    
       String name = LatestMentionChoreo.readStringUntil('\x1F');
       name.trim();
 
+      sprintf(msg, "done", returnCode);
       if (name == "Text") {
         if (LatestMentionChoreo.findUntil("join", "\x1E")) {
           LEDperiod = 500; //Speed up flashing when the text is found
