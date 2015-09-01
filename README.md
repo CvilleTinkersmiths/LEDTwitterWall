@@ -11,12 +11,19 @@ The board on the wall now is an Arduino Yun.
 
 ## Clone instructions
  * git clone 
- * create TembooAccount.h with your creds
- * open sketch in Arduino IDE
+ * create LEDTwitterWall/TwitterMentionsWall/TembooAccount.h with your creds
+ * open LEDTwitterWall/TwitterMentionsWall/TwitterMentionsWall.ino sketch in Arduino IDE
  * select Tools->Board-> Arduino Yun
  * select Tools->Port->Arduino Yun WiFi (the-yun-ip)
  * Compile and upload
  * You should be good to go!
+
+## The sketches here...
+ * TwitterMentionsWall - The main project, bringing it all together
+ * Console_Test	- The YUN DOES NOT SUPPORT SERIAL OVER WiFi, so you have to use the Bridge with Console.println instead to get output. This is an example to do just that.
+ * TwitterTest - USB only test of the Twitter/Temboo pulling code
+ * TwitterTestConsole - WiFi varient of the above, switching out Serial debug messages for Console
+
 
 ## Depend Libraries
  * Adafruit-GFX-Library-master.zip
