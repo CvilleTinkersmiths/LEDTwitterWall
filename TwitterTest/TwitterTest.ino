@@ -3,7 +3,7 @@
 #include "TembooAccount.h" // Contains Temboo account information   
 
 // We limit this so you won't use all of your Temboo calls while testing
-int maxCalls = 10;
+int maxCalls = 3;
 
 // The number of times this Choreo has been run so far in this sketch
 int calls = 0;
@@ -14,7 +14,7 @@ int outputPin = 13;
 void setup() {
   Serial.begin(9600);
   
-  // For debugging, wait until the serial console is connected
+  // For debugging, wait until the serial console is connected(USB ONLY!)
   delay(4000);
   while(!Serial);
   Bridge.begin();
@@ -61,12 +61,21 @@ void runLatestMention() {
       String name = LatestMentionChoreo.readStringUntil('\x1F');
       name.trim();
       
-          Serial.println("field: "+ name);
-      
       String data = LatestMentionChoreo.readStringUntil('\x1E');
       data.trim();
+          
+      Serial.println("field: "+ name);
 
       if (name == "Text") {
+        
+           ///////// Testing array copying stuff ///////////////
+          char msg[21]          = "initializing...";
+          data.toCharArray(msg, sizeof(data)*8);
+          msg[sizeof(data)*8] = 0;
+          Serial.println("msg:");
+          Serial.println(msg);
+          ///////////////
+             
           digitalWrite(outputPin, HIGH);
           Serial.println("data: " + data);
         
