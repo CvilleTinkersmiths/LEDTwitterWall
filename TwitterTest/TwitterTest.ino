@@ -60,15 +60,16 @@ void runLatestMention() {
     while (LatestMentionChoreo.available()) {
       String name = LatestMentionChoreo.readStringUntil('\x1F');
       name.trim();
+      
+          Serial.println("field: "+ name);
+      
+      String data = LatestMentionChoreo.readStringUntil('\x1E');
+      data.trim();
 
       if (name == "Text") {
-        if (LatestMentionChoreo.findUntil("did", "\x1E")) {
           digitalWrite(outputPin, HIGH);
-          LatestMentionChoreo.find("\x1E");
-        }
-      }
-      else {
-        LatestMentionChoreo.find("\x1E");
+          Serial.println("data: " + data);
+        
       }
     }
   }
