@@ -20,9 +20,9 @@ The board on the wall now is an Arduino Yun.
 
 ## The sketches here...
  * TwitterMentionsWall - The main project, bringing it all together
- * Console_Test	- The YUN DOES NOT SUPPORT SERIAL OVER WiFi, so you have to use the Bridge with Console.println instead to get output. This is an example to do just that.
+ * Console_Test	- The YUN DOES NOT SUPPORT SERIAL OVER WiFi, so you have to use the Bridge with Console.println instead to get output. This is an example to do just that. Start the sketch, then on a computer connected to the same network as the YUN, run ssh root@10.1.10.33 'telnet localhost 6571' where 10.1.10.33 is the ip or hostname of the YUN. Console messages will be sent here.
  * TwitterTest - USB only test of the Twitter/Temboo pulling code
- * TwitterTestConsole - WiFi varient of the above, switching out Serial debug messages for Console
+ * TwitterTestConsole - WiFi varient of the above, switching out Serial debug messages for Console - same ssh command as above to get it to run.
 
 
 ## Depend Libraries
