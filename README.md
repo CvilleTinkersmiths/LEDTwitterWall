@@ -22,3 +22,12 @@ The board on the wall now is an Arduino Yun.
  * Adafruit-GFX-Library-master.zip
  * Adafruit_NeoMatrix-master.zip
  * Adafruit_NeoPixel-master.zip
+ 
+ 
+## Some useful references:
+ * http://kiwitobes.com/2013/09/26/twitter-lights-and-memory-limits-with-arduino-yun/
+ * https://temboo.com/library/Library/Twitter/Timelines/LatestMention/
+ * https://www.arduino.cc/en/Tutorial/ConsoleRead
+ * https://www.arduino.cc/en/Guide/ArduinoYun
+ * http://stackoverflow.com/questions/20681318/arduino-yun-serial-communication-not-working
+ * 
