@@ -18,12 +18,16 @@ void setup() {
   
   Console.begin(); 
 
-  // Wait for Console port to connect
-  while (!Console); 
-  
   // Initialize pins
   pinMode(outputPin, OUTPUT);
-
+  
+  digitalWrite(outputPin, HIGH);
+          
+  // Wait for Console port to connect
+  while (!Console);
+  
+  digitalWrite(outputPin, LOW);
+  
   Console.println("Setup complete.\n");
 }
 
