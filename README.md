@@ -25,7 +25,16 @@ The board on the wall now is an Arduino Yun.
  * TwitterTestConsole - WiFi varient of the above, switching out Serial debug messages for Console - same ssh command as above to get it to run.
  * WallTest - Tests just the LED Matrix with a static message.
 
-
+## Configuring the Arduino YUN
+Sometimes you need to reset the wifi on the YUN, here are the steps:
+ * Press and hold the WLAN RST button for 30 seconds
+ * Power cycle the Arduino
+ * Connect to the wireless network the arduino sets up (it'll be Arduino-xxxxxx where xxxxx is the MAC address of wifi interface of the YUN)
+ * Open a browser and point it to http://192.168.240.1
+ * Go into the advanced page and set the WAN (eth1) to be a static IP
+ * Apply the settings
+ * Goto the basic configure page and setup the WiFi to your local WiFi, once you click apply and the settings are changed, you should be able to connect to it via WiFi, if you can't, then connect an eth cable to it and use the static IP. 
+ 
 ## Depend Libraries
  * Adafruit-GFX-Library-master.zip
  * Adafruit_NeoMatrix-master.zip
