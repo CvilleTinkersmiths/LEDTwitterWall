@@ -26,3 +26,10 @@
 *.exe
 *.out
 *.app
+
+# Sensitive files
+Console_Test/TembooAccount.h
+TwitterMentionsWall/TembooAccount.h
+WallTest/TembooAccount.h
+TwitterTest/TembooAccount.h
+TwitterTestConsole/TembooAccount.h
