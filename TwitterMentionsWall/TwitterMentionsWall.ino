@@ -121,12 +121,12 @@ void setup() {
 
   // Twitter support
   Bridge.begin();
-  Console.begin(); 
+  //Console.begin();
 
 
   // Wait for Console port to connect
-  while (!Console);
-  Console.println("Setup complete.\n");
+  //while (!Console);
+  //Console.println("Setup complete.\n");
 }
 
 ////////////////////////////////////////////////////////
@@ -148,8 +148,8 @@ void loop() {
 
   if(callPeriod && ((t - prevCalltime) >= callPeriod) && (calls < maxCalls)) { // Check Twitter periodically until maxCalls is reached
     prevCalltime = t;
-    Console.println("Calling LatestMention Choreo...\n");
-    runLatestMention();
+    //Console.println("Calling LatestMention Choreo...\n");
+    //runLatestMention();
     //sprintf(msg, "Call %d done", calls);
     calls++;
   }
