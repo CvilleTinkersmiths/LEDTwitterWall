@@ -41,7 +41,7 @@ Adafruit_NeoMatrix matrix(NEO_WIDTH, NEO_HEIGHT, NEO_PIN,
   NEO_MATRIX_ROWS + NEO_MATRIX_PROGRESSIVE,
   NEO_GRB         + NEO_KHZ800);
 
-char          msg[21]          = "init..."; // BLE 20 char limit + NUL
+char          msg[145]          = "init..."; // BLE 20 char limit + NUL
 uint8_t       msgLen           = NULL;              // Empty message
 int           msgX             = matrix.width();    // Start off right edge
 unsigned long prevFrameTime    = 0L;                // For animation timing
