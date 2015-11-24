@@ -1,4 +1,4 @@
-/*--------------------------------------------------------------------------
+ /*--------------------------------------------------------------------------
   GUGGENHAT: a Bluefruit LE-enabled wearable NeoPixel marquee.
 
   Requires:
@@ -16,11 +16,11 @@
   MIT license.  All text above must be included in any redistribution.
   --------------------------------------------------------------------------*/
 
-#include <SPI.h>
+//#include <SPI.h>
 #include <Adafruit_NeoPixel.h>
 #include <Adafruit_NeoMatrix.h>
 #include <Adafruit_GFX.h>
-
+#include <Console.h>
 
 // NEOPIXEL STUFF ----------------------------------------------------------
 
@@ -41,7 +41,7 @@ Adafruit_NeoMatrix matrix(NEO_WIDTH, NEO_HEIGHT, NEO_PIN,
   NEO_MATRIX_ROWS + NEO_MATRIX_PROGRESSIVE,
   NEO_GRB         + NEO_KHZ800);
 
-char          msg[21]          = "initializing..."; // BLE 20 char limit + NUL
+char          msg[21]          = "init..."; // BLE 20 char limit + NUL
 uint8_t       msgLen           = NULL;              // Empty message
 int           msgX             = matrix.width();    // Start off right edge
 unsigned long prevFrameTime    = 0L;                // For animation timing
@@ -71,13 +71,13 @@ unsigned long prevLEDtime = 0L;  // For LED timing
 
 
 // We limit this so you won't use all of your Temboo calls while testing
-int maxCalls = 10;
+int maxCalls = 2;
 
 // The number of times this Choreo has been run so far in this sketch
 int calls = 0;
 
 unsigned long prevCalltime = 0L;  // For Temboo Account Call timing
-int           CallPeriod   = 6000;   // Time (milliseconds) between calls to Temboo to check for Twitter mentions (zero disables)
+int           callPeriod   = 10*1000;   // Time (milliseconds) between calls to Temboo to check for Twitter mentions (zero disables)
 
 ///////// END Temboo stuff /////////////////
 
@@ -101,8 +101,10 @@ uint8_t unhex(char c) {
 }
 
 
-// MEAT, POTATOES ----------------------------------------------------------
 
+////////////////////////////////////////////////////////
+////////////       SETUP      //////////////////////////
+////////////////////////////////////////////////////////
 void setup() {
   matrix.begin();
   matrix.setRemapFunction(remapXY);
@@ -111,16 +113,25 @@ void setup() {
 
 
   pinMode(LED, OUTPUT);
-  digitalWrite(LED, HIGH);
+  LEDstate    = HIGH;
+  digitalWrite(LED, LEDstate);
   
   //set it flashing on 1sec interval
   LEDperiod = 1000;
 
   // Twitter support
   Bridge.begin();
+  Console.begin(); 
 
+
+  // Wait for Console port to connect
+  while (!Console);
+  Console.println("Setup complete.\n");
 }
 
+////////////////////////////////////////////////////////
+////////////     MAIN LOOP    //////////////////////////
+////////////////////////////////////////////////////////
 void loop() {
   unsigned long t = millis(); // Current elapsed time, milliseconds.
   // millis() comparisons are used rather than delay() so that animation
@@ -135,17 +146,14 @@ void loop() {
    
   }
 
-  if(CallPeriod && ((t - prevCalltime) >= CallPeriod) && (calls < maxCalls)) { // Check Twitter periodically until maxCalls is reached
+  if(callPeriod && ((t - prevCalltime) >= callPeriod) && (calls < maxCalls)) { // Check Twitter periodically until maxCalls is reached
     prevCalltime = t;
-    
-    //Serial.println("Calling LatestMention Choreo...");
-    //sprintf(msg, "Call %d, start", calls);
+    Console.println("Calling LatestMention Choreo...\n");
     runLatestMention();
     //sprintf(msg, "Call %d done", calls);
     calls++;
   }
 
-  
   if((t - prevFrameTime) >= (1000L / matrixFPS)) { // Handle scrolling
     matrix.fillScreen(0);
     matrix.setCursor(msgX, 0);
@@ -162,9 +170,8 @@ void loop() {
 ////////////////////////////////////////////////////////
 ////////////   Twitter Stuff  //////////////////////////
 ////////////////////////////////////////////////////////
-
-
 void runLatestMention() {
+    
   TembooChoreo LatestMentionChoreo;
 
   // Invoke the Temboo client
@@ -182,39 +189,37 @@ void runLatestMention() {
 
   // Run the Choreo
   unsigned int returnCode = LatestMentionChoreo.run();
-
+    
   // A return code of zero means everything worked
   if (returnCode == 0) {
-    
-    //sprintf(msg, "Choreo");
       
     while (LatestMentionChoreo.available()) {
-      
-      sprintf(msg, "reading", returnCode);
-    
       String name = LatestMentionChoreo.readStringUntil('\x1F');
       name.trim();
+      
+      String data = LatestMentionChoreo.readStringUntil('\x1E');
+      data.trim();
 
-      sprintf(msg, "done", returnCode);
       if (name == "Text") {
-        if (LatestMentionChoreo.findUntil("join", "\x1E")) {
+        
           LEDperiod = 500; //Speed up flashing when the text is found
-          
-          
-          //TODO: Verify I did this correctly...
-          name.toCharArray(msg, sizeof(name));
-          msgLen      = sizeof(name);
-          msg[msgLen] = 0;
+         
+          data.toCharArray(msg, sizeof(data)*8);
+          msg[sizeof(data)*8] = 0;
           msgX        = matrix.width(); // Reset scrolling
-          //END:todo
+
+          Console.println("Got it!");
+          Console.println(msg);
           
-          LatestMentionChoreo.find("\x1E");
-        }
-      }
-      else {
-        LatestMentionChoreo.find("\x1E");
+          //exit the read loop, we have everything we need
+          LatestMentionChoreo.close();
       }
     }
+    Console.println("Done with the cherno read loop");
+    
+  } else {
+    Console.println("Choreo run returned non-zero value:");
+    Console.println(returnCode);
   }
 
   LatestMentionChoreo.close();
