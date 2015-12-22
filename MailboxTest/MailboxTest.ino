@@ -14,13 +14,16 @@ void setup() {
   // Wait for Console port to connect
   while (!Console);
   Console.println("Setup complete.\n");
+  
+  Console.println("Welcome to Mailbox Reader\n");
+  Console.println("The Mailbox is checked every 10 seconds. The incoming messages will be shown below.\n");
 }
 
 void loop() {
   String message;
   while (Mailbox.messageAvailable()){
     Mailbox.readMessage(message);
-    Console.println(message);
+    Console.println("New mail! -- "+message);
   }
   Console.println("delaying 10 sec ...");
   delay(10000);

@@ -24,6 +24,7 @@ The board on the wall now is an Arduino Yun.
  * TwitterTest - USB only test of the Twitter/Temboo pulling code
  * TwitterTestConsole - WiFi varient of the above, switching out Serial debug messages for Console - same ssh command as above to get it to run.
  * WallTest - Tests just the LED Matrix with a static message.
+ * MailboxTest - Tests Yun REST API, used to confirm Bridge is functional(Web API->Bridge->Ardruino->Bridge->Console). Requires console connection (use ssh command from Console_Test).
 
 ## Configuring the Arduino YUN
 Sometimes you need to reset the wifi on the YUN, here are the steps:
