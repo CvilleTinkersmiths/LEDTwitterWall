@@ -16,11 +16,17 @@
   MIT license.  All text above must be included in any redistribution.
   --------------------------------------------------------------------------*/
 
-//#include <SPI.h>
+#ifndef DEBUG
+#define DEBUG 0 // If DEBUG is 1, the program will wait in startup until a Console is connected
+#endif
+
 #include <Adafruit_NeoPixel.h>
 #include <Adafruit_NeoMatrix.h>
 #include <Adafruit_GFX.h>
-#include <Console.h>
+
+#ifndef DEBUG
+  #include <Console.h>
+#endif
 
 // NEOPIXEL STUFF ----------------------------------------------------------
 
@@ -121,12 +127,19 @@ void setup() {
 
   // Twitter support
   Bridge.begin();
-  //Console.begin();
+
+  #if DEBUG
+    Console.begin();
+  #endif
+  
 
 
-  // Wait for Console port to connect
-  //while (!Console);
-  //Console.println("Setup complete.\n");
+  #if DEBUG
+    // Wait for Console port to connect
+    while (!Console);
+      Console.println("Setup complete.\n");
+  #endif
+  
 }
 
 ////////////////////////////////////////////////////////
@@ -148,9 +161,15 @@ void loop() {
 
   if(callPeriod && ((t - prevCalltime) >= callPeriod) && (calls < maxCalls)) { // Check Twitter periodically until maxCalls is reached
     prevCalltime = t;
-    //Console.println("Calling LatestMention Choreo...\n");
-    //runLatestMention();
-    //sprintf(msg, "Call %d done", calls);
+
+    
+    #if DEBUG
+    Console.println("Calling LatestMention Choreo...\n");
+    #endif
+
+    runLatestMention();
+    sprintf(msg, "Call %d done", calls);
+    
     calls++;
   }
 
@@ -207,19 +226,25 @@ void runLatestMention() {
           data.toCharArray(msg, sizeof(data)*8);
           msg[sizeof(data)*8] = 0;
           msgX        = matrix.width(); // Reset scrolling
-
-          Console.println("Got it!");
-          Console.println(msg);
+          
+          #if DEBUG
+            Console.println("Got it!");
+            Console.println(msg);
+          #endif
           
           //exit the read loop, we have everything we need
           LatestMentionChoreo.close();
       }
     }
-    Console.println("Done with the cherno read loop");
-    
+    #if DEBUG
+      Console.println("Done with the cherno read loop");
+    #endif
+
   } else {
-    Console.println("Choreo run returned non-zero value:");
-    Console.println(returnCode);
+    #if DEBUG
+      Console.println("Choreo run returned non-zero value:");
+      Console.println(returnCode);
+    #endif
   }
 
   LatestMentionChoreo.close();
