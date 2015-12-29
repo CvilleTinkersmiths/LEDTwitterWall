@@ -40,13 +40,13 @@ Adafruit_NeoMatrix matrix(NEO_WIDTH, NEO_HEIGHT, NEO_PIN,
   NEO_MATRIX_ROWS + NEO_MATRIX_PROGRESSIVE,
   NEO_GRB         + NEO_KHZ800);
 
-char          msg[21]          = "Hello World!"; // BLE 20 char limit + NUL
+char          msg[24]          = "Tinkersmiths Makerspace"; // BLE 20 char limit + NUL
 uint8_t       msgLen           = NULL;              // Empty message
 int           msgX             = matrix.width();    // Start off right edge
 unsigned long prevFrameTime    = 0L;                // For animation timing
-int           matrixFPS        = 10;                // Scrolling speed
+int           matrixFPS        = 15;                // Scrolling speed
 int           matrixColor      = matrix.Color(255,0,0); // RGB
-int           matrixBrightness = 31;                // Batteries have limited sauce (0 to 255)
+int           matrixBrightness = 50;                // Batteries have limited sauce (0 to 255)
 
 // STATUS LED STUFF --------------------------------------------------------
 
