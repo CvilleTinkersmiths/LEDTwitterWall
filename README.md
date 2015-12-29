@@ -47,11 +47,11 @@ Sometimes you need to reset the wifi on the YUN, here are the steps:
  * Goto the basic configure page and setup the WiFi to your local WiFi, once you click apply and the settings are changed, you should be able to connect to it via WiFi, if you can't, then connect an eth cable to it and use the static IP. 
  
 ## Depend Libraries
- * Adafruit-GFX-Library-master.zip
- * Adafruit_NeoMatrix-master.zip
- * Adafruit_NeoPixel-master.zip
- * FastLED(NeoPixel alternate)
- * Temboo
+ * Adafruit-GFX-Library-master.zip - https://github.com/adafruit/Adafruit-GFX-Library
+ * Adafruit_NeoMatrix-master.zip - https://github.com/adafruit/Adafruit_NeoMatrix
+ * Adafruit_NeoPixel-master.zip - https://github.com/adafruit/Adafruit_NeoPixel
+ * FastLED(NeoPixel alternate) - https://github.com/FastLED/FastLED
+ * Temboo - https://github.com/temboo/Temboo
  
  
 ## Some useful references:
